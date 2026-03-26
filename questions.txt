@@ -1,0 +1,47 @@
+I have lonng list of questiions
+
+what does nn.linear do ? self.query = nn.Linear(n_embed, head_size) # (32 → 16) means it creeates 2 layesrs going from 32 to 16 nodes ? 
+
+so the embedding is linked tto attantion heads ? 
+
+how does this makes sense ? also what is x in this conntext ? 
+
+in Q,K,V, what is V, the value? is it the value of that token? in our case it gives the character? 
+
+how does the model learn this Q,K,V value ? 
+
+Let's use a tiny example. 3 tokens, head_size = 4:
+
+can you give this eexample which includes embedding? heeree you use only tokeen for firstt citizeen spoke 
+
+when you mask future tokens you aree masking Q @ K^T this ? how do you get scores which you divide by sqrt(head_size)
+
+where does softmax get probabilities from what goes inside and what comes outt ? 
+
+why multiply by V and sum? 
+
+When scores are very large, softmax behaves badly? explain what does score mean here ?
+answer: 
+attenttion score: Q @K^T
+attenttion wieghtt: softmax(B,T,T)
+output= wieghts@V 
+
+is number of heads = embedding/head_size always ? how do you know head size do you decide randomly or any logic to it ? 
+
+prediction head (32 → 65)
+      ↓
+logits: (B, T, 65)
+what does this mean 32 heads going to 65 character? whats prediction head. ? why feedforward comes after attention?
+
+
+in this example Single Head First — No Multi-Head Yet
+why is head_size=16, doesnt that mean its 2 heads ? 
+
+at end you concatenate all heads in last dimenstion to get no. of embeddings? how does adding like this makes sense? 
+why seepeerate this dimension and do all the cirrcus of uusing heads just to add it back? dont you loose information? 
+
+i need to see one solid example from beginning to eend fully laid out for me to understand this whole thing better 
+along with explaining abovee questions as we go
+
+
+
