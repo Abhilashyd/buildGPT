@@ -134,3 +134,24 @@ for step in range (10000):
 print(loss.item())
 
 # %%
+n_embed=32
+block_size=8
+B,T=4,8
+
+idx=torch.randint(vocab_size,(B,T))
+print(f"input shape: {idx.shape}")
+
+token_emb_table=nn.Embedding(vocab_size,n_embed)
+tok_emb=token_emb_table(idx)
+print(f"token embedding shape: {tok_emb.shape}")
+
+pos_emb_table=nn.Embedding(block_size,n_embed)
+positions=torch.arange(T)
+print(f"positions: {positions}")
+pos_emb=pos_emb_table(positions)
+print(f"positiionn embedding shape: {pos_emb.shape}")
+
+x=tok_emb+pos_emb
+print(f"combined shape:{x.shape}")
+
+# %%
