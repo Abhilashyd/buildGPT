@@ -44,4 +44,27 @@ i need to see one solid example from beginning to eend fully laid out for me to 
 along with explaining abovee questions as we go
 
 
+----
+softmax makees results too peaky if not nnormalizeed by sqrt(head_size). and it doesn't learn anymore
+in intially we want thee results to be dispersed. 
+why does he say this ? whatt does he mean by that ? 
+he says especially during initializatiton. why ? 
+
+didnt' rreally understand why tthis ? 
+#crop idx to last block_size tokens
+            idx_cond=idx[:,-block_size:]
+
+optimizer.zero_grad(set_to_none=True)#backward pass
+tthis is backwarrd pass. why gradient zero for back propogation?
+oh this is just saying set gradient to 0 beefore loss.backwards
+
+max_new_tokens=300
+whatt does this mean? why do we need a max value? also dont we havee only 65 possible
+tokens because there are only 65 characterrs? 
+
+can you really show how the code flows? where does it get called and where and which
+arguments are passed. show for one full iteration. then i'll get howthe codee flows
+
+
+
 
