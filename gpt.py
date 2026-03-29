@@ -15,7 +15,7 @@ print(f"using device: {device}")
 # -- hyper parrameters --
 batch_size=32
 block_size=8
-max_iters=5000
+max_iters=3000
 eval_interval = 300
 learning_rate=1e-3 #model is bigger 
 eval_iters=200
@@ -147,16 +147,27 @@ class MultiHeadAttention(nn.Module):
         out = self.proj(out)
         return out
     
+class FeedForward(nn.Module):
+    """a simple lineearr layeer followed by non-lineearrity"""
 
+    def __init__(self,n_embed):
+        super().__init__()
+        self.net = nn.Sequential(nn.Linear(n_embed,4*n_embed), # container chains together 
+                                 nn.ReLU(),                    # linear layer+relu+linearlayer
+                                 nn.Linear(4*n_embed,n_embed))
+
+    def forward(self,x):
+        return self.net(x)
 
 class BigramLanguageModel(nn.Module):
-    def __init__(self, vocab_size):
+    def __init__(self):
         super().__init__()
         self.token_embedding_table=nn.Embedding(vocab_size,n_embed)
         self.position_embedding_table=nn.Embedding(block_size,n_embed)
         # self.sa_head = Head(head_size) #single attention head
         # self.lm_head = nn.Linear(n_embed,vocab_size) # prediction head
         self.sa_heads = MultiHeadAttention(n_head,head_size)
+        self.ffwd = FeedForward(n_embed) #feedforward
         self.lm_head = nn.Linear(n_embed,vocab_size)
 
     def forward(self,idx,targets=None):
@@ -170,7 +181,7 @@ class BigramLanguageModel(nn.Module):
         #self attention
         # x=self.sa_head(x)
         x=self.sa_heads(x)
-
+        x = self.ffwd(x)
         logits=self.lm_head(x)
 
         if targets is None:
@@ -189,7 +200,7 @@ class BigramLanguageModel(nn.Module):
             idx_cond=idx[:,-block_size:]
             logits,loss=self(idx_cond)#get predictions
             logits=logits[:,-1,:]#get only last time step (B,C)
-            probs=F.softmax(logits,dim=1) #(B,C)
+            probs=F.softmax(logits,dim=-1) #(B,C)
             idx_next=torch.multinomial(probs,num_samples=1)#(B,1)
             idx=torch.cat((idx,idx_next),dim=1)#(B,T+1)
 
@@ -197,7 +208,7 @@ class BigramLanguageModel(nn.Module):
 
 #--- init model ---
 
-model=BigramLanguageModel(vocab_size)
+model=BigramLanguageModel()
 m=model.to(device)
 
 #--- training loop--------

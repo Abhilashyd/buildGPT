@@ -95,6 +95,51 @@ dont really understand this. i need clearr explaination with an example
 ReLU breaks this — after ReLU you can't collapse the layers anymore. The network can now learn genuinely complex nonlinear patterns.
 really thatts innteresting. how is expanidn reelated to thinking room? kinda makees sense but not thoroughly
 
+----
+
+he interleaves communicationn annd computation in blocks and says output doesn't improvee
+because it became deep neural nnet and deeep neural net suffers forrm optimixzation issues
+why is that? 
+
+he ttalks about residual connection and mention s a paper. i wanna read thatt too. just 
+realized we havne't been realtting paper with what i'm doing. but after end of wattching video 
+and coding it out. ii wanna comeback and wanna walk through the paper. all the ones he mentions
+
+i dont really understand residual connection. he talks abt microgrrad video i haven't watched that
+he says durring backprropogation, addition distributes blah blah. can you explain the conceptt to me
+
+he says initially thee gradient flows from output to input unimpeded but later the other 
+parts start kicking in. what does he mean by that ? 
+
+why does he add projection again? 
+
+So you always have a gradient superhighway directly from output to input through the addition:
+output → gradient flows back →→→→→→→→→→→→→→→→ input
+                              ↑
+                    this path ALWAYS works
+                    no multiplication, just addition
+                    gradient arrives at input intact
+Even if F(x)'s gradient vanishes completely, the gradient still reaches the input via the skip connection. Early layers always get signal to learn from.
+but this means it only goes to input layers not the initial layers. isn't that a problme stilll ? 
+
+start of training:
+F(x) weights are near zero (random initialization)
+→ F(x) ≈ 0
+→ output = x + 0 = x   ← model is basically identity function!
+→ gradient flows perfectly through skip connection
+→ ALL layers get clean gradients from day one ✅
+
+why initial weights are zero. i though they were random. 
+
+FeedForward:
+  Linear(n_embed→4*n_embed) → ReLU → Linear(4*n_embed→n_embed) ✅
+  already returns n_embed, no extra proj needed here
+
+you said we add proj in feedforeward. but heere you say its not needeed. you are contradicting yourself
+
+
+
+
 
 
 
