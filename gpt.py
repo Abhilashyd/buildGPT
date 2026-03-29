@@ -121,7 +121,7 @@ class Head(nn.Module):
         q=self.query(x) 
 
         #attention scores
-        wei = q @ k.transpose(-2,-1) * (self.   head_size ** -0.5) #(B,T,T)
+        wei = q @ k.transpose(-2,-1) * (self.head_size ** -0.5) #(B,T,T)
 
         #mask future tokens
         wei= wei.masked_fill(self.tril[:T,:T] == 0,float('-inf'))
@@ -168,10 +168,12 @@ class Block(nn.Module):
         head_size = n_embed // n_head
         self.sa = MultiHeadAttention(n_head,head_size)
         self.ffwd = FeedForward(n_embed)
+        self.ln1 = nn.LayerNorm(n_embed)
+        self.ln2 = nn.LayerNorm(n_embed)
 
     def forward(self,x):
-        x = x + self.sa(x) #adding residual connection around attention
-        x = x + self.ffwd(x) #adding residual connection around feedforward
+        x = x + self.sa(self.ln1(x)) #adding residual connection around attention w/ prenorm
+        x = x + self.ffwd(self.ln2(x)) #adding residual connection around feedforward w/ pernorm
         return x
 
 class BigramLanguageModel(nn.Module):
@@ -188,8 +190,8 @@ class BigramLanguageModel(nn.Module):
             Block(n_embed,n_head),
             Block(n_embed,n_head),
         )
-
-        self.lm_head = nn.Linear(n_embed,vocab_size)
+        self.ln_f = nn.LayerNorm(n_embed)
+        self.lm_head = nn.Linear(n_embed,vocab_size)#prediction head
 
     def forward(self,idx,targets=None):
         B,T = idx.shape
@@ -205,7 +207,7 @@ class BigramLanguageModel(nn.Module):
         # x = x + self.ffwd(x) #adding residual connection around feedforward
 
         x = self.blocks(x)
-
+        x = self.ln_f(x)
         logits=self.lm_head(x)
 
         if targets is None:
