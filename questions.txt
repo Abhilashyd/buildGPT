@@ -66,5 +66,36 @@ can you really show how the code flows? where does it get called and where and w
 arguments are passed. show for one full iteration. then i'll get howthe codee flows
 
 
+# proj mixes information across heads
+# one more learned transformation before passing forward
+what is this, why like this? mottivation, use? 
+mixing means cross attention? so its not self attention anymore? 
+
+what is self.proj? what does it do show me with example
+
+learning_rate=1e-3 #model is bigger 
+so if biggeer learning late should be slower? why? what is this logic ? 
+
+listtening to next part my questions are: 
+wee went way to fast with logits=self.lm_head(x)
+tokens looked at each other but din't have time to think on what they found from other tokens. 
+what does he mean by that? how does adding feedfoward help with that ? 
+linearr layeer followed by ReLu. i forgot what rrelu is can you rremind me ? 
+so you can add linear layerrs wherever you want? i remembeer doing some projct where 
+nnumbeer of hidden layers arre hyper parameter which was tuned
+feedforward is per tokeen done independently what does that mean ? 
+
+
+why do we need nonlinearitty? i didn't understand very well. how is it relatted to 
+representing a complex structure. 
+Without nonlinearity stacking linear layers is useless: what does this mean ? 
+ReLU breaks this — after ReLU you can't collapse the layers anymore. The network can now learn genuinely complex nonlinear patterns.
+dont really understand this. i need clearr explaination with an example
+
+ReLU breaks this — after ReLU you can't collapse the layers anymore. The network can now learn genuinely complex nonlinear patterns.
+really thatts innteresting. how is expanidn reelated to thinking room? kinda makees sense but not thoroughly
+
+
+
 
 
