@@ -174,9 +174,37 @@ gamma annd beta? trainable parameeters? what ar eethey ?
  
 therre is layer norm at end of transformer right befor the final linearr layeerr. why this ? 
  
+ scaling up 
+ he makes cosmetic changes , in n_layer, nn.sequeeantial (*(block))
+ why
+ adds dropout at 3 different places why? how do you know what all places to drop out
+ hee talks about paper here too
+ dropout is different for forward and backpropogation pass? why? 
+ regularization technnique
+ head dimension 64 is standard he said? 
+  
+ the implementation is diffeerent because there is no encoderr block, its all decoder
+ can you explain this a bit moree?  
 
+ decoder: just triangular mask, autoregressive propeerty. tril, used for languuage model
+ original paper was considerreed different setttings. 
+ translating frrom french to english
+ geneeration is condittioned on additional info coming from encoder which is french sentence
 
+ so that meanns gpt is eencoder + decoderr right ? because we give prompt iteration 
 
+keys and valuees coming frrom encoder. why like that. why only keys and values ? 
 
+condittiioning decoding on past as well as frrom encoder. 
 
+nanogpt: he explains how its different. code is a bit complex. i think i should try this next 
+understand it and write it and run iteration.
+hee keeeeps saying i'm loading checkpoints. i dont know what he means by tthat.
 
+he said what he created was 10million parameters . i dont know what that actually mean when 
+they say this llm is these many parametters. which part of code is that.
+he also doesn't mentiion as 10 million in code he wrote 
+
+oh there is also gpt3 paper. that would be cool to study
+
+he talks about the blogpostt frrom chatgpt explaining how finetuning of model is done
