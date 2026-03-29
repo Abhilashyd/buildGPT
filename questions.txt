@@ -138,6 +138,42 @@ FeedForward:
 you said we add proj in feedforeward. but heere you say its not needeed. you are contradicting yourself
 
 
+self.blocks = nn.Sequential(
+            Block(n_embed,n_head),
+            Block(n_embed,n_head),
+            Block(n_embed,n_head),
+        )
+whhy 3 here ? explain
+
+ii removed 
+# x= x + self.sa_heads(x) #adding residual connection around attention
+        # x = x + self.ffwd(x) #adding residual connection around feedforward
+ and added 
+
+  x = self.blocks(x)  
+
+  where is residual layer anymore ? 
+
+
+---
+so he is talking about batch normlizattion. i didn't listten to his make morre serries
+can you explain me about it? 
+he says he is implementing column normaliization. is it accross batches? 
+what is the use of it? why do it ? 
+and he modifies to normalize the rows
+
+i'm so confused by all theese
+why rows are normalized? 100 dimenstion vector ? why ? 
+
+what is layer normaliization? why do it? how do it? i need to uncerstand verry clearly
+
+what is modified? now trranformer layerr norm applied before transformation? why ?
+prenorm formulation. ? 
+per token normaliization
+gamma annd beta? trainable parameeters? what ar eethey ? 
+ 
+therre is layer norm at end of transformer right befor the final linearr layeerr. why this ? 
+ 
 
 
 

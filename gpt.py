@@ -21,7 +21,7 @@ learning_rate=1e-3 #model is bigger
 eval_iters=200
 n_embed=32
 n_head=4
-head_size=n_embed // n_head
+# head_size=n_embed // n_head #computeed internaly
 #---------------------------
 
 #------data loading-------
@@ -107,6 +107,7 @@ class Head(nn.Module):
 
     def __init__(self,head_size):
         super().__init__()
+        self.head_size = head_size
         self.key    = nn.Linear(n_embed,head_size,bias=False)
         self.query  = nn.Linear(n_embed,head_size,bias=False)
         self.value  = nn.Linear(n_embed,head_size,bias=False)
@@ -120,7 +121,7 @@ class Head(nn.Module):
         q=self.query(x) 
 
         #attention scores
-        wei = q @ k.transpose(-2,-1) * (head_size ** -0.5) #(B,T,T)
+        wei = q @ k.transpose(-2,-1) * (self.   head_size ** -0.5) #(B,T,T)
 
         #mask future tokens
         wei= wei.masked_fill(self.tril[:T,:T] == 0,float('-inf'))
@@ -154,10 +155,24 @@ class FeedForward(nn.Module):
         super().__init__()
         self.net = nn.Sequential(nn.Linear(n_embed,4*n_embed), # container chains together 
                                  nn.ReLU(),                    # linear layer+relu+linearlayer
-                                 nn.Linear(4*n_embed,n_embed))
+                                 nn.Linear(4*n_embed,n_embed)) # projection layer for ffwd
 
     def forward(self,x):
         return self.net(x)
+    
+class Block(nn.Module):
+    """Transformer block: communicatiton followed by computation"""
+
+    def __init__(self,n_embed,n_head):
+        super().__init__()
+        head_size = n_embed // n_head
+        self.sa = MultiHeadAttention(n_head,head_size)
+        self.ffwd = FeedForward(n_embed)
+
+    def forward(self,x):
+        x = x + self.sa(x) #adding residual connection around attention
+        x = x + self.ffwd(x) #adding residual connection around feedforward
+        return x
 
 class BigramLanguageModel(nn.Module):
     def __init__(self):
@@ -166,8 +181,14 @@ class BigramLanguageModel(nn.Module):
         self.position_embedding_table=nn.Embedding(block_size,n_embed)
         # self.sa_head = Head(head_size) #single attention head
         # self.lm_head = nn.Linear(n_embed,vocab_size) # prediction head
-        self.sa_heads = MultiHeadAttention(n_head,head_size)
-        self.ffwd = FeedForward(n_embed) #feedforward
+        # self.sa_heads = MultiHeadAttention(n_head,head_size)
+        # self.ffwd = FeedForward(n_embed) #feedforward
+        self.blocks = nn.Sequential(
+            Block(n_embed,n_head),
+            Block(n_embed,n_head),
+            Block(n_embed,n_head),
+        )
+
         self.lm_head = nn.Linear(n_embed,vocab_size)
 
     def forward(self,idx,targets=None):
@@ -180,9 +201,11 @@ class BigramLanguageModel(nn.Module):
 
         #self attention
         # x=self.sa_head(x)
-        x= x + self.sa_heads(x) #adding residual connection around attention
-        x = x + self.ffwd(x) #adding residual connection around feedforward
-        
+        # x= x + self.sa_heads(x) #adding residual connection around attention
+        # x = x + self.ffwd(x) #adding residual connection around feedforward
+
+        x = self.blocks(x)
+
         logits=self.lm_head(x)
 
         if targets is None:
