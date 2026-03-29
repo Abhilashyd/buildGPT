@@ -180,8 +180,9 @@ class BigramLanguageModel(nn.Module):
 
         #self attention
         # x=self.sa_head(x)
-        x=self.sa_heads(x)
-        x = self.ffwd(x)
+        x= x + self.sa_heads(x) #adding residual connection around attention
+        x = x + self.ffwd(x) #adding residual connection around feedforward
+        
         logits=self.lm_head(x)
 
         if targets is None:
